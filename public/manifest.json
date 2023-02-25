@@ -1,0 +1,24 @@
+{
+  "name": "Weeds True Reviews Extension",
+  "description": "",
+  "version": "1.0",
+  "manifest_version": 3,
+  "background": {
+    "service_worker": "./background.js"
+  },
+  "permissions": [],
+  "author": "",
+  "homepage_url": "",
+  "short_name": "Weed Reviews Extension",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "React Chrome Extension",
+    "default_icon": {
+    }
+  },
+  "icons": {
+  },
+  "content_security_policy": {
+     "extension_pages": "script-src 'self'; object-src 'self'"
+  } 
+}

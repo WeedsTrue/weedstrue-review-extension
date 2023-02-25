@@ -1,0 +1,99 @@
+{
+    "env": {
+        "browser": true,
+        "es2021": true
+    },
+    "extends": [
+        "standard",
+        "eslint:recommended",
+        "plugin:react/recommended",
+        "prettier"
+    ],
+    "parserOptions": {
+        "ecmaFeatures": {
+            "jsx": true
+        },
+        "ecmaVersion": 12,
+        "sourceType": "module"
+    },
+    "plugins": [
+        "prettier",
+        "react",
+        "react-hooks"
+    ],
+    "rules": {
+        "eqeqeq": "error",
+        "no-console": "warn",
+        "prettier/prettier": [
+            "error",
+            {
+                "endOfLine": "auto",
+                "singleQuote": true,
+                "parser": "flow",
+                "trailingComma": "none",
+                "curly": "error"
+            }
+        ],
+        "react/display-name": "off",
+        "react/no-children-prop": "off",
+        "react/react-in-jsx-scope": "off",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "off",
+        "react/no-unescaped-entities": "off",
+        "react/sort-prop-types": [
+            "warn",
+            {
+                "callbacksLast": true,
+                "ignoreCase": true,
+                "requiredFirst": true,
+                "sortShapeProp": true,
+                "noSortAlphabetically": false
+            }
+        ],
+        "react/jsx-sort-props": [ "warn"],
+        "quotes": ["error", "single"],
+        "semi": [
+            2,
+            "always"
+        ],
+        "prefer-const": [
+            "warn",
+            {
+                "destructuring": "any",
+                "ignoreReadBeforeAssign": false
+            }
+        ],
+        "no-unused-vars": "warn",
+        "import/order": [
+            "error",
+            {
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal"
+                ],
+                "pathGroups": [
+                    {
+                        "pattern": "react",
+                        "group": "external",
+                        "position": "before"
+                    }
+                ],
+                "pathGroupsExcludedImportTypes": [
+                    "react"
+                ],
+                "newlines-between": "never",
+                "alphabetize": {
+                    "order": "asc",
+                    "caseInsensitive": true
+                }
+            }
+        ]
+    },
+    "ignorePatterns": [
+        "node_modules",
+        "build",
+        "dist",
+        "public"
+    ]
+}
