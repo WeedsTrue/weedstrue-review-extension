@@ -6,12 +6,14 @@
   "background": {
     "service_worker": "./background.js"
   },
-  "permissions": [],
+  "host_permissions": [
+    "https://ocs.ca/*"
+],
+  "permissions": ["tabs", "activeTab"],
   "author": "",
-  "homepage_url": "",
   "short_name": "Weed Reviews Extension",
   "action": {
-    "default_popup": "index.html",
+    "default_popup": "popup.html",
     "default_title": "React Chrome Extension",
     "default_icon": {
     }

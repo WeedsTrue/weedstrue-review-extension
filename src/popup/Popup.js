@@ -1,8 +1,8 @@
 import React from 'react';
 import { Text } from '@mantine/core';
 
-const App = () => {
+const Popup = () => {
   return <Text>Hello World</Text>;
 };
 
-export default () => <App />;
+export default () => <Popup />;
