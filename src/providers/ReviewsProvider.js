@@ -138,7 +138,6 @@ const importBrands = dispatch => async brands => {
       payload: { value: response.data }
     });
   } catch (e) {
-    console.log(e, e.response);
     dispatch({
       type: 'ERROR',
       stateName: 'brands',
