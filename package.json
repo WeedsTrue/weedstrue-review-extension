@@ -4,8 +4,10 @@
   "description": "",
   "main": "popup/index.js",
   "scripts": {
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
+    "build": "node scripts/build.js",
+    "eject": "react-scripts eject",
+    "start": "node scripts/start.js",
+    "test": "node scripts/test.js"
   },
   "keywords": [],
   "author": "WeedsTrue",

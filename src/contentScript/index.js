@@ -1,26 +1,38 @@
 import React from 'react';
+import { createEmotionCache, MantineProvider } from '@mantine/core';
 import ReactDOM from 'react-dom';
 import '@webcomponents/custom-elements';
 import ContentScript from './ContentScript';
+import { Provider as ReviewsProvider } from '../providers/ReviewsProvider';
 
-class ReactExtensionContainer extends HTMLElement {
-  connectedCallback() {
-    const mountPoint = document.createElement('span');
-    mountPoint.id = 'reactExtensionPoint';
+const element = document.createElement('div');
+const shadowRoot = element.attachShadow({ mode: 'open' });
+const mountPoint = document.createElement('div');
+const emotionRoot = document.createElement('div');
 
-    const reactRoot = this.attachShadow({ mode: 'open' }).appendChild(
-      mountPoint
-    );
+shadowRoot.appendChild(mountPoint);
+shadowRoot.appendChild(emotionRoot);
 
-    ReactDOM.render(<ContentScript />, mountPoint);
-  }
-}
+document.body.appendChild(element);
 
-const initWebComponent = function () {
-  customElements.define('react-extension-container', ReactExtensionContainer);
+const myCache = createEmotionCache({ key: 'mantine', container: shadowRoot });
 
-  const app = document.createElement('react-extension-container');
-  document.documentElement.appendChild(app);
-};
-
-initWebComponent();
+ReactDOM.render(
+  <ReviewsProvider>
+    <MantineProvider
+      emotionCache={myCache}
+      theme={{
+        components: {
+          Portal: {
+            defaultProps: {
+              target: emotionRoot
+            }
+          }
+        }
+      }}
+    >
+      <ContentScript />
+    </MantineProvider>
+  </ReviewsProvider>,
+  mountPoint
+);

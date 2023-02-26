@@ -3,12 +3,10 @@
   "description": "",
   "version": "1.0",
   "manifest_version": 3,
-  "background": {
-    "service_worker": "./background.js"
-  },
   "host_permissions": [
+    "https://localhost:7264/*",
     "https://ocs.ca/*"
-],
+  ],
   "permissions": ["tabs", "activeTab"],
   "author": "",
   "short_name": "Weed Reviews Extension",
@@ -20,6 +18,15 @@
   },
   "icons": {
   },
+  "background": {
+    "service_worker": "static/js/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://ocs.ca/*"],
+      "js": ["static/js/content.js"]
+    }
+  ],
   "content_security_policy": {
      "extension_pages": "script-src 'self'; object-src 'self'"
   } 
