@@ -1,7 +1,5 @@
 /dist
 /build
-/config
-/scripts
 /node_modules
 /src/components/semantic/dist
 
