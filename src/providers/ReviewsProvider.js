@@ -3,7 +3,9 @@ import createProvider from './createProvider';
 import weedstrueAPI from '../api/weedstrueAPI';
 
 const initialState = {
-  brands: { value: [], loading: false, error: null }
+  brands: { value: [], loading: false, error: null },
+  brand: { value: null, loading: false, error: null },
+  product: { value: null, loading: false, error: null }
 };
 
 const reducer = (state, action) => {
@@ -123,6 +125,28 @@ const fetchBrands = dispatch => async () => {
   }
 };
 
+const fetchBrand = dispatch => async uuid => {
+  try {
+    dispatch({
+      type: 'FETCHING',
+      stateName: 'brand'
+    });
+    const response = await weedstrueAPI.get(`/api/brands/${uuid}`);
+
+    dispatch({
+      type: 'SUCCESS',
+      stateName: 'brand',
+      payload: { value: response.data }
+    });
+  } catch (e) {
+    dispatch({
+      type: 'ERROR',
+      stateName: 'brand',
+      payload: 'Oops something went wrong.'
+    });
+  }
+};
+
 const importBrands = dispatch => async brands => {
   try {
     dispatch({
@@ -146,11 +170,83 @@ const importBrands = dispatch => async brands => {
   }
 };
 
+const fetchProduct =
+  dispatch => async (uuid, onSuccessCallback, onErrorCallback) => {
+    try {
+      dispatch({
+        type: 'FETCHING',
+        stateName: 'product'
+      });
+      const response = await weedstrueAPI.get(`/api/products/${uuid}`);
+
+      dispatch({
+        type: 'SUCCESS',
+        stateName: 'product',
+        payload: { value: response.data }
+      });
+      if (onSuccessCallback) {
+        onSuccessCallback();
+      }
+    } catch (e) {
+      if (onErrorCallback) {
+        onErrorCallback(e);
+      }
+      dispatch({
+        type: 'ERROR',
+        stateName: 'product',
+        payload: 'Oops something went wrong.'
+      });
+    }
+  };
+
+const syncProduct =
+  dispatch =>
+  async (
+    { name, description, brand, links },
+    onSuccessCallback,
+    onErrorCallback
+  ) => {
+    try {
+      dispatch({
+        type: 'FETCHING',
+        stateName: 'brands'
+      });
+
+      const response = await weedstrueAPI.post('/api/products/sync', {
+        name,
+        description,
+        brand,
+        links
+      });
+
+      dispatch({
+        type: 'SUCCESS',
+        stateName: 'brands',
+        payload: { value: response.data }
+      });
+      if (onSuccessCallback) {
+        onSuccessCallback();
+      }
+    } catch (e) {
+      if (onErrorCallback) {
+        onErrorCallback(e);
+      }
+      dispatch({
+        type: 'ERROR',
+        stateName: 'brands',
+        payload: 'Oops something went wrong.'
+      });
+    }
+  };
+
 export const { Provider, Context } = createProvider(
   reducer,
   {
     fetchBrands,
-    importBrands
+    fetchBrand,
+    fetchProduct,
+    importBrands,
+    syncProduct
   },
   initialState
 );
