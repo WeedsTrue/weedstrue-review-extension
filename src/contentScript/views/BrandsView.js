@@ -1,39 +1,16 @@
-/* global chrome */
-import React, { useContext } from 'react';
-import { Button, Stack } from '@mantine/core';
-import PropTypes from 'prop-types';
-import { Context as ReviewsContext } from '../../providers/ReviewsProvider';
+import React from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import BrandDetails from '../../components/brands/BrandDetails';
+import BrandList from '../../components/brands/BrandList';
 
-const BrandsView = ({ location }) => {
-  const { state, importBrands } = useContext(ReviewsContext);
-
-  const onImportBrands = () => {
-    const brandElements = document
-      .getElementsByTagName('table')[0]
-      .getElementsByTagName('a');
-    const brands = [...brandElements].map(b => ({
-      name: b.innerText,
-      links: [{ value: b.href, fkLinkSourceType: 1 }]
-    }));
-
-    importBrands(brands);
-  };
-
+const BrandsView = () => {
   return (
-    <Stack>
-      <Button
-        onClick={() => {
-          onImportBrands();
-        }}
-      >
-        Import Brands
-      </Button>
-    </Stack>
+    <Routes>
+      <Route element={<BrandList />} path="/" />
+      <Route element={<BrandDetails />} path="/:uuid" />
+      <Route element={<Navigate replace to="/brands" />} path="*" />
+    </Routes>
   );
-};
-
-BrandsView.propTypes = {
-  location: PropTypes.object
 };
 
 export default BrandsView;
