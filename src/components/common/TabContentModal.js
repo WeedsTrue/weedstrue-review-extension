@@ -126,7 +126,9 @@ const TabContentModal = ({ children }) => {
                     </Stack>
                   ) : (
                     <Stack sx={{ flex: 1, gap: 0, height: '100%' }}>
-                      <Header onClose={dispatch('close-modal')} />
+                      <Header
+                        onClose={() => dispatch({ type: 'close-modal' })}
+                      />
                       <Divider />
                       <Stack sx={{ padding: 10, flex: 1, overflow: 'auto' }}>
                         {children}
