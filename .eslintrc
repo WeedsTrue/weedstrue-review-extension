@@ -25,7 +25,7 @@
         "eqeqeq": "error",
         "no-console": "warn",
         "prettier/prettier": [
-            "error",
+            "warn",
             {
                 "endOfLine": "auto",
                 "singleQuote": true,
@@ -51,7 +51,7 @@
             }
         ],
         "react/jsx-sort-props": [ "warn"],
-        "quotes": ["error", "single"],
+        "quotes": ["warn", "single"],
         "semi": [
             2,
             "always"
