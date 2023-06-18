@@ -2,7 +2,7 @@ import React from 'react';
 import { createEmotionCache, MantineProvider } from '@mantine/core';
 import ReactDOM from 'react-dom';
 import '@webcomponents/custom-elements';
-import ContentScript from './ContentScript';
+import App from './App';
 import { Provider as ReviewsProvider } from '../providers/ReviewsProvider';
 
 const element = document.createElement('div');
@@ -31,7 +31,7 @@ ReactDOM.render(
         }
       }}
     >
-      <ContentScript />
+      <App />
     </MantineProvider>
   </ReviewsProvider>,
   mountPoint

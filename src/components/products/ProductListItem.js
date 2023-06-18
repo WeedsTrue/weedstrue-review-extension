@@ -1,5 +1,5 @@
 import React from 'react';
-import { Rating, Stack, Text } from '@mantine/core';
+import { Group, Image, Rating, Stack, Text } from '@mantine/core';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
@@ -8,34 +8,32 @@ const ProductListItem = ({ product }) => {
     <Stack
       component={Link}
       sx={{
-        border: 'solid 1px lightgrey',
+        outline: '1px solid lightgrey',
         padding: 10,
         gap: 0,
         overflow: 'hidden',
         textDecoration: 'none',
-        color: '#000'
+        color: '#000',
+        '&:hover': {
+          outline: '2px solid dodgerblue'
+        }
       }}
       to={`/products/${product.uuid}`}
     >
-      <Text sx={{ fontSize: 16 }} weight={500}>
-        {product.name}
-      </Text>
-      <Text sx={{ fontSize: 14, color: '#3f3f3f' }} weight={500}>
-        {product.brand.name}
-      </Text>
-      <Rating readOnly value={4} />
-      <Text
-        sx={{
-          fontSize: 14,
-          overflow: 'hidden',
-          textOverflow: 'ellipsis',
-          WebkitLineClamp: 3,
-          WebkitBoxOrient: 'vertical',
-          display: '-webkit-box'
-        }}
-      >
-        {product.description}
-      </Text>
+      <Group noWrap>
+        <Stack>
+          <Image height={65} src={product.images[0]?.src} width={65} />
+        </Stack>
+        <Stack sx={{ gap: 0, flex: 1 }}>
+          <Text sx={{ fontSize: 16 }} weight={500}>
+            {product.name}
+          </Text>
+          <Text sx={{ fontSize: 14, color: '#3f3f3f' }} weight={500}>
+            {product.brand.name}
+          </Text>
+          <Rating readOnly value={product.rating} />
+        </Stack>
+      </Group>
     </Stack>
   );
 };

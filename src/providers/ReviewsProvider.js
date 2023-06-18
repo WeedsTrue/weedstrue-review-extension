@@ -1,11 +1,13 @@
-/* global chrome */
 import createProvider from './createProvider';
 import weedstrueAPI from '../api/weedstrueAPI';
 
 const initialState = {
   brands: { value: [], loading: false, error: null },
   brand: { value: null, loading: false, error: null },
-  product: { value: null, loading: false, error: null }
+  comments: { value: [], loading: false, error: null },
+  product: { value: null, loading: false, error: null },
+  userPosts: { value: [], loading: false, error: null },
+  userPost: { value: null, loading: false, error: null }
 };
 
 const reducer = (state, action) => {
@@ -184,6 +186,62 @@ const fetchProduct =
         stateName: 'product',
         payload: { value: response.data }
       });
+
+      dispatch({
+        type: 'SUCCESS',
+        stateName: 'userPosts',
+        payload: { value: response.data.userPosts.data }
+      });
+      if (onSuccessCallback) {
+        onSuccessCallback();
+      }
+    } catch (e) {
+      const message = getErrorMessage(e);
+      if (onErrorCallback) {
+        onErrorCallback(message);
+      }
+      dispatch({
+        type: 'ERROR',
+        stateName: 'product',
+        payload: 'Oops something went wrong.'
+      });
+    }
+  };
+
+const syncProduct =
+  dispatch =>
+  async (
+    { name, productType, description, brand, links, images, productAttributes },
+    onSuccessCallback,
+    onErrorCallback
+  ) => {
+    try {
+      dispatch({
+        type: 'FETCHING',
+        stateName: 'product'
+      });
+
+      const response = await weedstrueAPI.post('/api/products/sync', {
+        name,
+        productType,
+        description,
+        brand,
+        links,
+        images,
+        productAttributes
+      });
+
+      dispatch({
+        type: 'SUCCESS',
+        stateName: 'product',
+        payload: { value: response.data }
+      });
+
+      dispatch({
+        type: 'SUCCESS',
+        stateName: 'userPosts',
+        payload: { value: response.data.userPosts.data }
+      });
       if (onSuccessCallback) {
         onSuccessCallback();
       }
@@ -199,51 +257,99 @@ const fetchProduct =
     }
   };
 
-const syncProduct =
+const fetchUserPosts =
   dispatch =>
   async (
-    { name, description, brand, links },
+    {
+      fkUserPostType,
+      sortBy,
+      orderBy,
+      lastUserPost,
+      fkBrand,
+      fkProduct,
+      fkUser,
+      showFollowingOnly
+    },
     onSuccessCallback,
     onErrorCallback
   ) => {
     try {
       dispatch({
         type: 'FETCHING',
-        stateName: 'brands'
+        stateName: 'userPosts'
       });
-
-      const response = await weedstrueAPI.post('/api/products/sync', {
-        name,
-        description,
-        brand,
-        links
+      const response = await weedstrueAPI.get('/api/userPosts', {
+        params: {
+          fkUserPostType,
+          sortBy,
+          orderBy,
+          lastUserPost,
+          fkBrand,
+          fkProduct,
+          fkUser,
+          showFollowingOnly
+        }
       });
-
-      dispatch({
-        type: 'SUCCESS',
-        stateName: 'brands',
-        payload: { value: response.data }
-      });
+      if (lastUserPost) {
+        dispatch({
+          type: 'APPEND',
+          stateName: 'userPosts',
+          payload: response.data.data
+        });
+      } else {
+        dispatch({
+          type: 'SUCCESS',
+          stateName: 'userPosts',
+          payload: { value: response.data.data }
+        });
+      }
       if (onSuccessCallback) {
-        onSuccessCallback();
+        onSuccessCallback(response.data.totalCount);
       }
     } catch (e) {
-      if (onErrorCallback) {
-        onErrorCallback(e);
-      }
       dispatch({
         type: 'ERROR',
-        stateName: 'brands',
+        stateName: 'userPosts',
         payload: 'Oops something went wrong.'
       });
     }
   };
+
+const fetchUserPost = dispatch => async uuid => {
+  try {
+    dispatch({
+      type: 'FETCHING',
+      stateName: 'userPost'
+    });
+    const response = await weedstrueAPI.get(`/api/userPosts/${uuid}`);
+
+    dispatch({
+      type: 'SUCCESS',
+      stateName: 'userPost',
+      payload: { value: response.data }
+    });
+
+    dispatch({
+      type: 'SUCCESS',
+      stateName: 'comments',
+      payload: { value: response.data.comments ?? [] }
+    });
+  } catch (e) {
+    dispatch({
+      type: 'ERROR',
+      stateName: 'userPost',
+      payload: 'Oops something went wrong.'
+    });
+  }
+};
 
 export const { Provider, Context } = createProvider(
   reducer,
   {
     fetchBrands,
     fetchBrand,
+    fetchUserPosts,
+    fetchUserPost,
     fetchProduct,
     importBrands,
     syncProduct

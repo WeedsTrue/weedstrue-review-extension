@@ -1,5 +1,17 @@
 import React from 'react';
-import { createRoot } from 'react-dom/client';
-import Popup from './Popup';
+import { MantineProvider } from '@mantine/core';
+import ReactDOM from 'react-dom';
+import '@webcomponents/custom-elements';
+import App from './App';
+import GlobalStyles from '../config/GlobalStyles';
+import { Provider as ReviewsProvider } from '../providers/ReviewsProvider';
 
-createRoot(document.getElementById('root')).render(<Popup />);
+ReactDOM.render(
+  <ReviewsProvider>
+    <MantineProvider>
+      <GlobalStyles />
+      <App />
+    </MantineProvider>
+  </ReviewsProvider>,
+  document.getElementById('root')
+);
