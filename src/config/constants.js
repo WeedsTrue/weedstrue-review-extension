@@ -1,4 +1,4 @@
-const PRODUCTION = false;
+const PRODUCTION = true;
 
 const PRODUCT_TYPE = {
   DRY_FLOWER: {

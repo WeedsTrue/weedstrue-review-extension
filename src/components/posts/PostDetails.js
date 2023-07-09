@@ -3,6 +3,7 @@ import {
   ActionIcon,
   Alert,
   Badge,
+  Divider,
   Group,
   Rating,
   Skeleton,
@@ -12,17 +13,23 @@ import {
 } from '@mantine/core';
 import dayjs from 'dayjs';
 import PropTypes from 'prop-types';
-import { Link, useParams } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import { Leaf, Message, Point } from 'tabler-icons-react';
 import UserPostImageCarousel from './UserPostImageCarousel';
-import { USER_POST_TYPE, USER_POST_TYPE_LIST } from '../../config/constants';
+import {
+  REVIEW_WEBSITE_URL,
+  USER_POST_TYPE,
+  USER_POST_TYPE_LIST
+} from '../../config/constants';
 import { stripDateOfUTC } from '../../helpers/format';
 import { Context as ReviewsContext } from '../../providers/ReviewsProvider';
+import CommentList from '../comments/CommentList';
 import ProductAttribute from '../products/ProductAttribute';
 import ProductEffect from '../products/ProductEffect';
 const relativeTime = require('dayjs/plugin/relativeTime');
 
 const PostDetails = ({ postItem }) => {
+  const { pathname } = useLocation();
   dayjs.extend(relativeTime);
   const hasFetched = useRef(false);
   const { state, fetchUserPost } = useContext(ReviewsContext);
@@ -71,11 +78,15 @@ const PostDetails = ({ postItem }) => {
                     >
                       <Group sx={{ gap: 3, display: 'inline-flex' }}>
                         <Text
-                          component={Link}
+                          onClick={() =>
+                            window.open(
+                              `${REVIEW_WEBSITE_URL}/profile/${userPost.user.username}`,
+                              '_blank'
+                            )
+                          }
                           sx={{
                             '&:hover': { textDecoration: 'underline' }
                           }}
-                          to={`/profile/${userPost.user.username}`}
                         >
                           Posted by {userPost.user.username}
                         </Text>
@@ -97,6 +108,12 @@ const PostDetails = ({ postItem }) => {
                     </Text>
                     {!userPost.hidden && (
                       <Title
+                        onClick={() =>
+                          window.open(
+                            `${REVIEW_WEBSITE_URL}${pathname}`,
+                            '_blank'
+                          )
+                        }
                         order={4}
                         sx={{
                           overflow: 'hidden',
@@ -212,10 +229,16 @@ const PostDetails = ({ postItem }) => {
                 </Group>
               </Stack>
             </Group>
-            {/* <CommentList
-                  comments={state.comments.value}
-                  userPost={userPost}
-                /> */}
+            <Stack sx={{ gap: 0 }}>
+              <Text size={14} weight={500}>
+                Comments
+              </Text>
+              <Divider />
+              <CommentList
+                comments={state.comments.value}
+                userPost={userPost}
+              />
+            </Stack>
           </Stack>
         </Stack>
       ) : (

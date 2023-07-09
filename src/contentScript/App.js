@@ -18,18 +18,11 @@ const getInitialLocation = pathname => {
 
   let initialUrl = '/';
   switch (splitUrl[0]) {
-    case 'blog':
-      if (splitUrl[1] === 'shop-by-brands') {
-        initialUrl = '/brands';
-      }
+    case 'products': {
+      const className = document.getElementsByClassName('product')[0];
+      initialUrl = className ? `/products/${splitUrl[1]}/sync` : '/products';
       break;
-    case 'collections':
-      initialUrl = splitUrl.length > 1 ? `/brands/${splitUrl[1]}` : '/brands';
-      break;
-    case 'products':
-      initialUrl =
-        splitUrl.length > 1 ? `/products/${splitUrl[1]}/sync` : '/products';
-      break;
+    }
     default:
       break;
   }
