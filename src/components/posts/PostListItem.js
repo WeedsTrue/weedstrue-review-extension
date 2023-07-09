@@ -201,33 +201,45 @@ const PostListItem = ({ userPost }) => {
       </Stack>
     </>
   ) : (
-    <Card>
-      <Stack sx={{ gap: 10, textDecoration: 'none', color: '#000' }}>
-        <Stack
-          sx={{
-            gap: 10,
-            overflow: 'hidden'
-          }}
-        >
-          <Skeleton height={26} radius="xl" width="40%" />
-          <Skeleton height={20} radius="xl" width={100} />
-          <Skeleton height={10} radius="xl" />
-          <Skeleton height={10} radius="xl" />
-          <Skeleton height={10} radius="xl" width="70%" />
+    <Stack
+      sx={mq({
+        overflow: 'visible',
+        padding: 5,
+        outline: '1px solid lightgrey',
+        color: '#000'
+      })}
+    >
+      <Group sx={{ alignItems: 'start', gap: 5 }}>
+        <Stack sx={{ gap: 10, textDecoration: 'none', color: '#000', flex: 1 }}>
+          <Stack
+            sx={{
+              gap: 10,
+              overflow: 'hidden',
+              marginLeft: 5
+            }}
+          >
+            <Stack sx={{ gap: 5 }}>
+              <Skeleton height={26} radius="xl" width="40%" />
+              <Skeleton height={20} radius="xl" width={100} />
+              <Skeleton height={10} radius="xl" />
+              <Skeleton height={10} radius="xl" />
+              <Skeleton height={10} radius="xl" width="70%" />
+            </Stack>
+            <Group>
+              <Group sx={{ gap: 5 }}>
+                <Skeleton height={20} width={100} />
+              </Group>
+              <Group>
+                <Skeleton height={20} width={64} />
+              </Group>
+              <Group>
+                <Skeleton height={20} width={24} />
+              </Group>
+            </Group>
+          </Stack>
         </Stack>
-        <Group>
-          <Group sx={{ gap: 5 }}>
-            <Skeleton height={20} width={100} />
-          </Group>
-          <Group>
-            <Skeleton height={20} width={64} />
-          </Group>
-          <Group>
-            <Skeleton height={20} width={24} />
-          </Group>
-        </Group>
-      </Stack>
-    </Card>
+      </Group>
+    </Stack>
   );
 };
 

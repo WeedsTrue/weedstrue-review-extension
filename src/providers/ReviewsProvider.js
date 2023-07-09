@@ -6,6 +6,8 @@ const initialState = {
   brand: { value: null, loading: false, error: null },
   comments: { value: [], loading: false, error: null },
   product: { value: null, loading: false, error: null },
+  products: { value: [], loading: false, error: null },
+  productFilters: { value: null, loading: false, error: null },
   userPosts: { value: [], loading: false, error: null },
   userPost: { value: null, loading: false, error: null }
 };
@@ -75,7 +77,9 @@ const reducer = (state, action) => {
         ...state,
         [action.stateName]: {
           ...state[action.stateName],
-          value: [...state[action.stateName].value, action.payload],
+          value: Array.isArray(action.payload)
+            ? [...state[action.stateName].value, ...action.payload]
+            : [...state[action.stateName].value, action.payload],
           loading: false
         }
       };
@@ -171,6 +175,77 @@ const importBrands = dispatch => async brands => {
     });
   }
 };
+
+const fetchProductFilters = dispatch => async () => {
+  try {
+    dispatch({
+      type: 'FETCHING',
+      stateName: 'productFilters'
+    });
+
+    const response = await weedstrueAPI.get('/api/products/filters');
+    dispatch({
+      type: 'SUCCESS',
+      stateName: 'productFilters',
+      payload: { value: response.data }
+    });
+  } catch (e) {
+    dispatch({
+      type: 'ERROR',
+      stateName: 'productFilters',
+      payload: 'Oops something went wrong.'
+    });
+  }
+};
+
+const fetchProducts =
+  dispatch =>
+  async (
+    { fkProductType, sortBy, orderBy, fkBrand, lastPkProduct },
+    onSuccessCallback,
+    onErrorCallback
+  ) => {
+    try {
+      if (!lastPkProduct) {
+        dispatch({
+          type: 'FETCHING',
+          stateName: 'products'
+        });
+      }
+
+      const response = await weedstrueAPI.get('/api/products', {
+        params: {
+          fkProductType,
+          sortBy,
+          orderBy,
+          fkBrand,
+          lastPkProduct
+        }
+      });
+      if (lastPkProduct) {
+        dispatch({
+          type: 'APPEND',
+          stateName: 'products',
+          payload: response.data.data
+        });
+      } else {
+        dispatch({
+          type: 'SUCCESS',
+          stateName: 'products',
+          payload: { value: response.data.data }
+        });
+      }
+      if (onSuccessCallback) {
+        onSuccessCallback(response.data.totalCount);
+      }
+    } catch (e) {
+      dispatch({
+        type: 'ERROR',
+        stateName: 'products',
+        payload: 'Oops something went wrong.'
+      });
+    }
+  };
 
 const fetchProduct =
   dispatch => async (uuid, onSuccessCallback, onErrorCallback) => {
@@ -278,6 +353,7 @@ const fetchUserPosts =
         type: 'FETCHING',
         stateName: 'userPosts'
       });
+
       const response = await weedstrueAPI.get('/api/userPosts', {
         params: {
           fkUserPostType,
@@ -351,6 +427,8 @@ export const { Provider, Context } = createProvider(
     fetchUserPosts,
     fetchUserPost,
     fetchProduct,
+    fetchProductFilters,
+    fetchProducts,
     importBrands,
     syncProduct
   },

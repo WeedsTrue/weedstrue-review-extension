@@ -19,9 +19,7 @@ const PostList = ({
   const { pathname } = useLocation();
   const hasFetched = useRef(false);
   const { state, fetchUserPosts } = useContext(ReviewsContext);
-  const t = true;
   const [filterState, setFilterState] = useState({
-    sortAction: 'trending',
     sortBy: 'trending',
     fkUserPostType: fkBrand || fkProduct ? 1 : null,
     lastUserPost: null,
@@ -71,8 +69,7 @@ const PostList = ({
         onFilterChange={onFilterChange}
       />
       <Divider />
-      {t ||
-      (searchOnRender && !hasFetched.current) ||
+      {(searchOnRender && !hasFetched.current) ||
       isLoading ||
       state.userPosts.loading ? (
         <>
