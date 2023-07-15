@@ -5,6 +5,7 @@ import {
   Routes,
   Navigate
 } from 'react-router-dom';
+import BrandImport from '../components/brands/BrandListImport';
 import TabContentModal from '../components/common/TabContentModal';
 import BrandsView from '../views/BrandsView';
 import CommunityView from '../views/CommunityView';
@@ -45,6 +46,7 @@ const App = () => {
   const initalLocation = getInitialLocation(window.location.pathname);
   return (
     <Router initialEntries={[initalLocation]}>
+      {window.location.pathname.includes('shop-all-brands') && <BrandImport />}
       <TabContentModal>
         <Routes>
           <Route element={<BrandsView />} path="/brands/*" />
