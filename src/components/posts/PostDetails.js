@@ -12,7 +12,6 @@ import {
   Title
 } from '@mantine/core';
 import dayjs from 'dayjs';
-import PropTypes from 'prop-types';
 import { useLocation, useParams } from 'react-router-dom';
 import { Leaf, Message, Point } from 'tabler-icons-react';
 import UserPostImageCarousel from './UserPostImageCarousel';
@@ -28,7 +27,7 @@ import ProductAttribute from '../products/ProductAttribute';
 import ProductEffect from '../products/ProductEffect';
 const relativeTime = require('dayjs/plugin/relativeTime');
 
-const PostDetails = ({ postItem }) => {
+const PostDetails = () => {
   const { pathname } = useLocation();
   dayjs.extend(relativeTime);
   const hasFetched = useRef(false);
@@ -85,6 +84,7 @@ const PostDetails = ({ postItem }) => {
                             )
                           }
                           sx={{
+                            cursor: 'pointer',
                             '&:hover': { textDecoration: 'underline' }
                           }}
                         >
@@ -117,7 +117,8 @@ const PostDetails = ({ postItem }) => {
                         order={4}
                         sx={{
                           overflow: 'hidden',
-                          textOverflow: 'ellipsis'
+                          textOverflow: 'ellipsis',
+                          cursor: 'pointer'
                         }}
                       >
                         {userPost.title}
@@ -304,9 +305,6 @@ const PostDetails = ({ postItem }) => {
   );
 };
 
-PostDetails.propTypes = {
-  isLoading: PropTypes.bool,
-  postItem: PropTypes.object
-};
+PostDetails.propTypes = {};
 
 export default PostDetails;

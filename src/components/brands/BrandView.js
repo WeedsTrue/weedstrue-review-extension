@@ -25,7 +25,6 @@ const BrandView = () => {
         }
         path="/posts/:uuid/*"
       />
-
       <Route
         element={
           <BrandDetails brand={state.brand.value} isLoading={isLoading} />

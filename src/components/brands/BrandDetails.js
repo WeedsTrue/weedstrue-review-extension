@@ -23,7 +23,7 @@ const BrandDetails = ({ brand, isLoading }) => {
           <PostList fkBrand={brand.pkBrand} searchOnRender />
         </Tabs.Panel>
         <Tabs.Panel pt="xs" value="products">
-          <ProductsList products={brand.products} />
+          <ProductsList fkBrand={brand.pkBrand} searchOnRender />
         </Tabs.Panel>
       </Tabs>
     </Stack>

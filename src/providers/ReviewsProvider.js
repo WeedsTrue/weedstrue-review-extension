@@ -109,6 +109,41 @@ const getErrorMessage = error => {
   return 'Oops something went wrong.';
 };
 
+const syncBrand =
+  dispatch =>
+  async ({ name, description, links }, onSuccessCallback, onErrorCallback) => {
+    try {
+      dispatch({
+        type: 'FETCHING',
+        stateName: 'brand'
+      });
+
+      const response = await weedstrueAPI.post('/api/brands/sync', {
+        name,
+        description,
+        links
+      });
+
+      dispatch({
+        type: 'SUCCESS',
+        stateName: 'brand',
+        payload: { value: response.data }
+      });
+      if (onSuccessCallback) {
+        onSuccessCallback();
+      }
+    } catch (e) {
+      if (onErrorCallback) {
+        onErrorCallback(e);
+      }
+      dispatch({
+        type: 'ERROR',
+        stateName: 'brand',
+        payload: 'Oops something went wrong.'
+      });
+    }
+  };
+
 const fetchBrands = dispatch => async () => {
   try {
     dispatch({
@@ -201,12 +236,12 @@ const fetchProductFilters = dispatch => async () => {
 const fetchProducts =
   dispatch =>
   async (
-    { fkProductType, sortBy, orderBy, fkBrand, lastPkProduct },
+    { fkProductType, sortBy, orderBy, fkBrand, skip },
     onSuccessCallback,
     onErrorCallback
   ) => {
     try {
-      if (!lastPkProduct) {
+      if (!skip) {
         dispatch({
           type: 'FETCHING',
           stateName: 'products'
@@ -219,10 +254,10 @@ const fetchProducts =
           sortBy,
           orderBy,
           fkBrand,
-          lastPkProduct
+          skip
         }
       });
-      if (lastPkProduct) {
+      if (skip) {
         dispatch({
           type: 'APPEND',
           stateName: 'products',
@@ -239,6 +274,9 @@ const fetchProducts =
         onSuccessCallback(response.data.totalCount);
       }
     } catch (e) {
+      if (onErrorCallback) {
+        onErrorCallback();
+      }
       dispatch({
         type: 'ERROR',
         stateName: 'products',
@@ -311,12 +349,6 @@ const syncProduct =
         stateName: 'product',
         payload: { value: response.data }
       });
-
-      dispatch({
-        type: 'SUCCESS',
-        stateName: 'userPosts',
-        payload: { value: response.data.userPosts.data }
-      });
       if (onSuccessCallback) {
         onSuccessCallback();
       }
@@ -339,7 +371,7 @@ const fetchUserPosts =
       fkUserPostType,
       sortBy,
       orderBy,
-      lastUserPost,
+      skip,
       fkBrand,
       fkProduct,
       fkUser,
@@ -349,24 +381,26 @@ const fetchUserPosts =
     onErrorCallback
   ) => {
     try {
-      dispatch({
-        type: 'FETCHING',
-        stateName: 'userPosts'
-      });
+      if (!skip) {
+        dispatch({
+          type: 'FETCHING',
+          stateName: 'userPosts'
+        });
+      }
 
       const response = await weedstrueAPI.get('/api/userPosts', {
         params: {
           fkUserPostType,
           sortBy,
           orderBy,
-          lastUserPost,
+          skip,
           fkBrand,
           fkProduct,
           fkUser,
           showFollowingOnly
         }
       });
-      if (lastUserPost) {
+      if (skip) {
         dispatch({
           type: 'APPEND',
           stateName: 'userPosts',
@@ -430,7 +464,8 @@ export const { Provider, Context } = createProvider(
     fetchProductFilters,
     fetchProducts,
     importBrands,
-    syncProduct
+    syncProduct,
+    syncBrand
   },
   initialState
 );

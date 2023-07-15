@@ -2,7 +2,6 @@ import React from 'react';
 import {
   ActionIcon,
   Badge,
-  Card,
   Group,
   Rating,
   Skeleton,
