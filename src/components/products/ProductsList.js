@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import { Button, Card, Stack, Text } from '@mantine/core';
+import { Button, Card, Divider, Stack, Text } from '@mantine/core';
 import PropTypes from 'prop-types';
 import ProductListFilter from './ProductListFilter';
 import ProductListItem from './ProductListItem';
@@ -11,7 +11,7 @@ const ProductsList = ({ fkBrand, searchOnRender }) => {
   const [filterState, setFilterState] = useState({
     sortBy: 'trending',
     fkProductType: null,
-    lastPkProduct: null,
+    skip: null,
     totalCount: 0,
     isLoading: false,
     showMoreLoading: false
@@ -28,7 +28,7 @@ const ProductsList = ({ fkBrand, searchOnRender }) => {
           ...filterState,
           totalCount,
           isLoading: false,
-          lastPkProduct: null,
+          skip: null,
           showMoreLoading: false
         })
       );
@@ -42,13 +42,14 @@ const ProductsList = ({ fkBrand, searchOnRender }) => {
       [name]: value,
       isLoading: true
     };
-    newState.showMoreLoading = !!newState.lastPkProduct;
+    newState.showMoreLoading = !!newState.skip;
     setFilterState(newState);
     fetchProducts({ ...newState, fkBrand }, totalCount =>
       setFilterState({
         ...newState,
         totalCount,
-        lastPkProduct: null,
+        isLoading: false,
+        skip: null,
         showMoreLoading: false
       })
     );
@@ -61,7 +62,7 @@ const ProductsList = ({ fkBrand, searchOnRender }) => {
         isLoading={filterState.isLoading}
         onFilterChange={onFilterChange}
       />
-
+      <Divider />
       {(searchOnRender && !hasFetched.current) || state.products.loading ? (
         <>
           <ProductListItem />
@@ -92,13 +93,8 @@ const ProductsList = ({ fkBrand, searchOnRender }) => {
           <Button
             color="dark"
             loading={filterState.showMoreLoading}
-            onClick={() =>
-              onFilterChange(
-                'lastPkProduct',
-                state.products.value[state.products.value.length - 1].pkProduct
-              )
-            }
-            sx={{ margin: 'auto', marginTop: 10 }}
+            onClick={() => onFilterChange('skip', state.products.value.length)}
+            sx={{ margin: '10px auto' }}
             variant="outline"
           >
             Show More

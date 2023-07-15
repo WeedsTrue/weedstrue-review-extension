@@ -22,9 +22,10 @@ const PostList = ({
   const [filterState, setFilterState] = useState({
     sortBy: 'trending',
     fkUserPostType: fkBrand || fkProduct ? 1 : null,
-    lastUserPost: null,
+    skip: null,
     totalCount: 0,
-    isLoading: false
+    isLoading: false,
+    showMoreLoading: false
   });
 
   useEffect(() => {
@@ -39,7 +40,9 @@ const PostList = ({
           setFilterState({
             ...filterState,
             totalCount,
-            isLoading: false
+            isLoading: false,
+            skip: null,
+            showMoreLoading: false
           })
       );
       hasFetched.current = true;
@@ -52,11 +55,16 @@ const PostList = ({
       [name]: value,
       isLoading: true
     };
+    newState.showMoreLoading = !!newState.skip;
+
     setFilterState(newState);
     fetchUserPosts({ ...newState, fkUser, fkBrand, fkProduct }, totalCount =>
       setFilterState({
         ...newState,
-        totalCount
+        totalCount,
+        isLoading: false,
+        skip: null,
+        showMoreLoading: false
       })
     );
   };
@@ -69,9 +77,7 @@ const PostList = ({
         onFilterChange={onFilterChange}
       />
       <Divider />
-      {(searchOnRender && !hasFetched.current) ||
-      isLoading ||
-      state.userPosts.loading ? (
+      {(searchOnRender && !hasFetched.current) || state.userPosts.loading ? (
         <>
           <PostListItem />
           <PostListItem />
@@ -102,13 +108,9 @@ const PostList = ({
       {!isLoading && filterState.totalCount > state.userPosts.value.length && (
         <Button
           color="dark"
-          onClick={() =>
-            onFilterChange(
-              'lastUserPost',
-              state.userPosts.value[state.userPosts.value.length - 1].pkUserPost
-            )
-          }
-          sx={{ margin: 'auto', marginTop: 10 }}
+          loading={filterState.showMoreLoading}
+          onClick={() => onFilterChange('skip', state.userPosts.value.length)}
+          sx={{ margin: '10px auto' }}
           variant="outline"
         >
           Show More

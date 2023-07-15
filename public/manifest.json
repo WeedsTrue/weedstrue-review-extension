@@ -1,6 +1,6 @@
 {
-  "name": "Weeds True Reviews Extension",
-  "description": "",
+  "name": "WeedsTrue Reviews",
+  "description": "Recreational cannabis product reviews for canadians!",
   "version": "1.0",
   "manifest_version": 3,
   "host_permissions": [
@@ -8,15 +8,21 @@
     "https://ocs.ca/*"
   ],
   "permissions": ["tabs", "activeTab"],
-  "author": "",
-  "short_name": "Weed Reviews Extension",
+  "author": "Graham Ormond",
+  "short_name": "WeedsTrue Reviews",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "React Chrome Extension",
+    "default_title": "WeedsTrue Reviews Chrome Extension",
     "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
     }
   },
   "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   },
   "background": {
     "service_worker": "static/js/background.js"

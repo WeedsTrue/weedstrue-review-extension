@@ -1,9 +1,12 @@
 import React from 'react';
-import { Card, Stack, Text } from '@mantine/core';
+import { Button, Card, Stack } from '@mantine/core';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
 import CommentListItem from './CommentListItem';
+import { REVIEW_WEBSITE_URL } from '../../config/constants';
 
-const CommentList = ({ userPost, comments, isLoading }) => {
+const CommentList = ({ comments, isLoading }) => {
+  const { pathname } = useLocation();
   const commentsSorted =
     comments?.sort((a, b) => new Date(b.created) - new Date(a.created)) ?? [];
   const postComments = commentsSorted.filter(c => !c.fkCommentParent);
@@ -20,10 +23,16 @@ const CommentList = ({ userPost, comments, isLoading }) => {
         </>
       ) : comments.length === 0 ? (
         <Card>
-          <Stack sx={{ padding: 60 }}>
-            <Text sx={{ margin: 'auto' }} weight={500}>
+          <Stack sx={{ padding: 30 }}>
+            <Button
+              color="blue"
+              onClick={() =>
+                window.open(`${REVIEW_WEBSITE_URL}${pathname}/submit`, '_blank')
+              }
+              variant="outline"
+            >
               Be the first to comment!
-            </Text>
+            </Button>
           </Stack>
         </Card>
       ) : (
@@ -41,8 +50,7 @@ const CommentList = ({ userPost, comments, isLoading }) => {
 
 CommentList.propTypes = {
   comments: PropTypes.array,
-  isLoading: PropTypes.bool,
-  userPost: PropTypes.object
+  isLoading: PropTypes.bool
 };
 
 export default CommentList;

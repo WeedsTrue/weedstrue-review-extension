@@ -23,6 +23,18 @@ const getInitialLocation = pathname => {
       initialUrl = className ? `/products/${splitUrl[1]}/sync` : '/products';
       break;
     }
+    case 'collections': {
+      const brandFilterOptions = document
+        .getElementsByClassName('filter__options--brand')[0]
+        ?.getElementsByTagName('label');
+
+      const className = document.getElementsByClassName('collection--brand')[0];
+      initialUrl =
+        className || brandFilterOptions?.length === 1
+          ? `/brands/${splitUrl[1]}/sync`
+          : '/';
+      break;
+    }
     default:
       break;
   }

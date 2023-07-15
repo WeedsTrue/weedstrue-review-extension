@@ -1,6 +1,6 @@
 import React from 'react';
 import { Stack } from '@mantine/core';
-import BrandImport from './BrandImport';
+import BrandImport from './BrandSync';
 
 const BrandList = () => {
   return (
